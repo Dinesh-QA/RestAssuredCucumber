@@ -1,8 +1,13 @@
 package methods;
 
+import static io.restassured.RestAssured.given;
+
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+import org.testng.Assert;
+
+import Utilities.ConvertJsonPath;
 import Utilities.ConvertToJson;
 import Utilities.getTestData;
 import io.restassured.builder.RequestSpecBuilder;
@@ -11,7 +16,6 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import static io.restassured.RestAssured.given;
 import pojo.Login;
 import testdata.GetEndPoint;
 
@@ -54,6 +58,18 @@ public class Ecom_Login {
 				.extract().response();
 
 		System.out.println("✅ Login API executed. Response captured successfully.");
+	}
+
+	public void checkResponseCode(int value) {
+		Assert.assertEquals(response.getStatusCode(), value);
+	}
+
+	public boolean validateResponseBody(String key, String value) {
+		boolean validation = false;
+		String ActualValue = ConvertJsonPath.convertJsonpath(response.asString(), key);
+
+		return validation;
+
 	}
 
 }

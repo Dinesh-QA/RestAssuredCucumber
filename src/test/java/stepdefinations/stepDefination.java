@@ -1,7 +1,8 @@
 package stepdefinations;
 
-import java.io.IOException;
+import org.testng.Assert;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,9 +21,15 @@ public class stepDefination {
 		ecomLogin.callLoginAPI(apiName);
 	}
 
-	@Then("the response {string} should be {string}")
-	public void the_response_should_be(String string, String string2) {
+	@Then("the response code should be {int}")
+	public void the_response_should_be(int value) {
+		ecomLogin.checkResponseCode(value);
+	}
 
+	@And("the response {string} should be {string}")
+	public void ResponseBody(String key, String value) {
+		Assert.assertEquals(ecomLogin.validateResponseBody(key, value), true,
+				"Reponse of " + key + " is not matching with " + value);
 	}
 
 }
