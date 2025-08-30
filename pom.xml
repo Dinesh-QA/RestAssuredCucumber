@@ -9,7 +9,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<restassured.version>5.5.5</restassured.version>
+		<restassured.version>5.5.0</restassured.version>
 		<cucumber.version>7.27.0</cucumber.version>
 		<testng.version>7.0.0</testng.version>
 		<jackson.version>2.19.2</jackson.version>
@@ -22,9 +22,8 @@
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
 			<version>${restassured.version}</version>
-			<scope>test</scope>
 		</dependency>
-
+		
 		<!-- Cucumber for Java -->
 		<dependency>
 			<groupId>io.cucumber</groupId>

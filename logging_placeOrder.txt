@@ -1,0 +1,51 @@
+Request method:	POST
+Request URI:	https://rahulshettyacademy.com/api/ecom/order/create-order
+Proxy:			<none>
+Request params:	<none>
+Query params:	<none>
+Form params:	<none>
+Path params:	<none>
+Headers:		Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2MyZTQ4NWMwMTlmYjFhZDYxMTg1YmIiLCJ1c2VyRW1haWwiOiJhcGl0ZXN0cHJhY3Rpc2VAeW9wbWFpbC5jb20iLCJ1c2VyTW9iaWxlIjoxMjM0NTY3ODkxLCJ1c2VyUm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzU2NTUxMzgyLCJleHAiOjE3ODgxMDg5ODJ9.W-KxgkezU3JiPA3MhB_oh3EBQzp-NNMbQQvLQYog950
+				Accept=*/*
+				Content-Type=application/json
+Cookies:		<none>
+Multiparts:		<none>
+Body:
+{
+    "orders": [
+        {
+            "country": "India",
+            "productOrderedId": "68b2d8d7f669d6cb0aa6d72d"
+        }
+    ]
+}
+HTTP/1.1 201 Created
+Date: Sat, 30 Aug 2025 10:56:23 GMT
+Server: Apache/2.4.52 (Ubuntu)
+Content-Security-Policy: default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+X-DNS-Prefetch-Control: off
+Expect-CT: max-age=0
+X-Frame-Options: SAMEORIGIN
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Download-Options: noopen
+X-Content-Type-Options: nosniff
+X-Permitted-Cross-Domain-Policies: none
+Referrer-Policy: no-referrer
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 123
+ETag: W/"7b-zqZr8IMoGZQUZo+818D2yWEpUZI"
+Vary: Accept-Encoding
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+
+{
+    "orders": [
+        "68b2d8d7f669d6cb0aa6d732"
+    ],
+    "productOrderId": [
+        "68b2d8d7f669d6cb0aa6d72d"
+    ],
+    "message": "Order Placed Successfully"
+}

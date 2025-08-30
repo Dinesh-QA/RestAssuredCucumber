@@ -11,14 +11,14 @@ import methods.Ecom_Login;
 public class stepDefination {
 	Ecom_Login ecomLogin = new Ecom_Login();
 
-	@Given("I prepare a login payload")
-	public void prepareALoginPayload() throws Exception {
-		ecomLogin.loginPayload();
+	@Given("I prepare a {string} payload")
+	public void prepareALoginPayload(String payloadName) throws Exception {
+		ecomLogin.prepareRequest(payloadName);
 	}
-
+	
 	@When("the user calls the {string} API with a POST HTTP request")
 	public void the_user_calls_the_api_with_a_post_http_request(String apiName) {
-		ecomLogin.callLoginAPI(apiName);
+		ecomLogin.callAPI(apiName);
 	}
 
 	@Then("the response code should be {int}")
@@ -31,5 +31,13 @@ public class stepDefination {
 		Assert.assertEquals(ecomLogin.validateResponseBody(key, value), true,
 				"Reponse of " + key + " is not matching with " + value);
 	}
+	
+	@Then("I store {string} from response")
+	public void iStoreResponse(String key) {
+		ecomLogin.storeValue(key);
+	}
+	
+
+	
 
 }

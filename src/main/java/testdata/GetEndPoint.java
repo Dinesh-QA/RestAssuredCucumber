@@ -1,7 +1,9 @@
 package testdata;
 
 public enum GetEndPoint {
-	login("/api/ecom/auth/login");
+	login("/api/ecom/auth/login"),
+	AddProduct("/api/ecom/product/add-product"),
+	PlaceOrder("/api/ecom/order/create-order");
 
 	private String endPoint;
 

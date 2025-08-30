@@ -2,6 +2,7 @@ package methods;
 
 import static io.restassured.RestAssured.given;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
@@ -9,6 +10,7 @@ import org.testng.Assert;
 
 import Utilities.ConvertJsonPath;
 import Utilities.ConvertToJson;
+import Utilities.getTestContext;
 import Utilities.getTestData;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -16,7 +18,9 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import pojo.AddProduct;
 import pojo.Login;
+import pojo.PlaceOrder;
 import testdata.GetEndPoint;
 
 public class Ecom_Login {
@@ -25,39 +29,68 @@ public class Ecom_Login {
 	private Response response; // Stores API response
 	private Login login; // POJO reference for login payload
 	private ConvertToJson convert; // Utility to convert POJO to JSON string
+	private static File file;
+	getTestContext textContext = getTestContext.getInstance();
 
-	public void loginPayload() throws Exception {
-		// Log all requests & responses into logging.txt file
-		PrintStream log = new PrintStream(new FileOutputStream("logging.txt"));
+	public void prepareRequest(String apiType) throws Exception {
+		// Dynamic log file name for each API type
+		String logFile = "logging_" + apiType + ".txt";
+		PrintStream log = new PrintStream(new FileOutputStream(logFile));
 
-		// Base request specification (server URL, logging, headers, etc.)
-		basereq = new RequestSpecBuilder().setBaseUri(getTestData.GetTestData("baseURL"))
-				.addFilter(RequestLoggingFilter.logRequestTo(log)) // logs outgoing request
-				.addFilter(ResponseLoggingFilter.logResponseTo(log)) // logs incoming response
-				.setContentType(ContentType.JSON) // request body is JSON
-				.build();
+		RequestSpecBuilder builder = new RequestSpecBuilder().setBaseUri(getTestData.GetTestData("baseURL"))
+				.addFilter(RequestLoggingFilter.logRequestTo(log)).addFilter(ResponseLoggingFilter.logResponseTo(log));
 
-		// Convert login POJO into JSON string just for debugging (prints to console)
-		System.out.println("🔹 Request Payload (JSON): " + convert.ConvertObjectToJson(
-				login.LoginBodyBuilder(getTestData.GetTestData("userEmail"), getTestData.GetTestData("userPassword"))));
+		if (apiType.equalsIgnoreCase("login")) {
+			// Login Payload
+			Login loginPayload = login.LoginBodyBuilder(getTestData.GetTestData("userEmail"),
+					getTestData.GetTestData("userPassword"));
 
-		// Attach body (POJO) to request → RestAssured auto-serializes POJO into JSON
-		req = given().spec(basereq).body(
-				login.LoginBodyBuilder(getTestData.GetTestData("userEmail"), getTestData.GetTestData("userPassword")));
+			System.out.println("🔹 Login Request Payload (JSON): " + convert.ConvertObjectToJson(loginPayload));
 
-		System.out.println("✅ Login request prepared successfully, ready to hit API...");
+			basereq = builder.setContentType(ContentType.JSON).build();
+			req = given().spec(basereq).body(loginPayload);
+
+		} else if (apiType.equalsIgnoreCase("addProduct")) {
+			// Add Product Payload
+			file = new File(getTestData.GetTestData("filePath"));
+			AddProduct product = AddProduct.addProductBuilder("Shoes", textContext.getUserId(), "fashion", "shoes", 1000,
+					"Addidas Shoes", "Men", file);
+
+			System.out.println("🔹 Add Product Request Payload (JSON): " + convert.ConvertObjectToJson(product));
+
+			basereq = builder.setContentType(ContentType.MULTIPART).addHeader("Authorization", textContext.getToken()).build();
+
+			req = given().spec(basereq).multiPart("productName", product.getProductName())
+					.multiPart("productAddedBy", product.getProductAddedBy())
+					.multiPart("productCategory", product.getProductCategory())
+					.multiPart("productSubCategory", product.getProductSubCategory())
+					.multiPart("productPrice", String.valueOf(product.getProductPrice()))
+					.multiPart("productDescription", product.getProductDescription())
+					.multiPart("productFor", product.getProductFor())
+					.multiPart("productImage", product.getProductImage());
+		} else if (apiType.equalsIgnoreCase("placeOrder")) {
+			// place Order Payload
+			PlaceOrder placeOrderPayload = PlaceOrder.buildPlaceOrder("India", textContext.getProductId());
+
+			System.out.println(
+					"🔹 Place Order Request Payload (JSON): " + convert.ConvertObjectToJson(placeOrderPayload));
+
+			basereq = builder.setContentType(ContentType.JSON).addHeader("Authorization", textContext.getToken()).build();
+			req = given().spec(basereq).body(placeOrderPayload);
+
+		}
+
+		System.out.println("✅ " + apiType + " request prepared successfully, ready to hit API...");
 	}
 
-	public void callLoginAPI(String apiName) {
-		System.out.println("🚀 Calling Login API endpoint: /api/ecom/auth/login");
-
+	public void callAPI(String apiName) {
 		GetEndPoint endPoint = GetEndPoint.valueOf(apiName);
 
 		response = req.when().post(endPoint.getEndPoint()) // send POST request
 				.then().log().all() // log response details in console
 				.extract().response();
 
-		System.out.println("✅ Login API executed. Response captured successfully.");
+		System.out.println("✅ API executed. Response captured successfully.");
 	}
 
 	public void checkResponseCode(int value) {
@@ -65,11 +98,26 @@ public class Ecom_Login {
 	}
 
 	public boolean validateResponseBody(String key, String value) {
-		boolean validation = false;
-		String ActualValue = ConvertJsonPath.convertJsonpath(response.asString(), key);
+		String actualValue;
+		if (key.equalsIgnoreCase("status")) {
+			String statusLine = response.getStatusLine();
+			actualValue = statusLine.substring(statusLine.indexOf(" ") + 1).split(" ", 2)[1];
+		} else {
+			actualValue = ConvertJsonPath.convertJsonpath(response.asString(), key);
+		}
 
-		return validation;
+		return value.equalsIgnoreCase(actualValue);
 
+	}
+
+	public void storeValue(String key) {
+		if (key.equalsIgnoreCase("token")) {
+			textContext.setToken(ConvertJsonPath.convertJsonpath(response.asString(), key));
+		} else if (key.equalsIgnoreCase("userId")) {
+			textContext.setUserId(ConvertJsonPath.convertJsonpath(response.asString(), key));
+		} else if (key.equalsIgnoreCase("productId")) {
+			textContext.setProductId(ConvertJsonPath.convertJsonpath(response.asString(), key));
+		}
 	}
 
 }
