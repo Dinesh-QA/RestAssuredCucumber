@@ -16,9 +16,9 @@ public class stepDefination {
 		ecomLogin.prepareRequest(payloadName);
 	}
 	
-	@When("the user calls the {string} API with a POST HTTP request")
-	public void the_user_calls_the_api_with_a_post_http_request(String apiName) {
-		ecomLogin.callAPI(apiName);
+	@When("the user calls the {string} API with a {string} HTTP request")
+	public void the_user_calls_the_api_with_a_post_http_request(String apiName,String requestMethod) {
+		ecomLogin.callAPI(apiName,requestMethod);
 	}
 
 	@Then("the response code should be {int}")
@@ -35,9 +35,6 @@ public class stepDefination {
 	@Then("I store {string} from response")
 	public void iStoreResponse(String key) {
 		ecomLogin.storeValue(key);
-	}
-	
-
-	
+	}	
 
 }

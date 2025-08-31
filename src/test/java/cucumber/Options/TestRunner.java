@@ -13,7 +13,7 @@ import java.io.File;
 		glue = { "stepdefinations" },
 
 		// Run only scenarios tagged with @FirstTest
-		tags = "@LoginApp or @PlaceProduct or @PlaceOrder",
+		tags = "@LoginApp or @PlaceProduct or @PlaceOrder or @DeleteProduct",
 
 		// Reporting plugins
 		plugin = { "pretty", "json:target/cucumber-reports/cucumber.json",

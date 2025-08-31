@@ -24,6 +24,7 @@ import pojo.PlaceOrder;
 import testdata.GetEndPoint;
 
 public class Ecom_Login {
+	private RequestSpecBuilder builder;
 	private RequestSpecification basereq; // Base specification (common settings like baseUri, filters, headers)
 	private RequestSpecification req; // Actual request (base spec + body)
 	private Response response; // Stores API response
@@ -37,11 +38,12 @@ public class Ecom_Login {
 		String logFile = "logging_" + apiType + ".txt";
 		PrintStream log = new PrintStream(new FileOutputStream(logFile));
 
-		RequestSpecBuilder builder = new RequestSpecBuilder().setBaseUri(getTestData.GetTestData("baseURL"))
+		builder = new RequestSpecBuilder().setBaseUri(getTestData.GetTestData("baseURL"))
 				.addFilter(RequestLoggingFilter.logRequestTo(log)).addFilter(ResponseLoggingFilter.logResponseTo(log));
 
 		if (apiType.equalsIgnoreCase("login")) {
 			// Login Payload
+
 			Login loginPayload = login.LoginBodyBuilder(getTestData.GetTestData("userEmail"),
 					getTestData.GetTestData("userPassword"));
 
@@ -52,13 +54,15 @@ public class Ecom_Login {
 
 		} else if (apiType.equalsIgnoreCase("addProduct")) {
 			// Add Product Payload
+
 			file = new File(getTestData.GetTestData("filePath"));
-			AddProduct product = AddProduct.addProductBuilder("Shoes", textContext.getUserId(), "fashion", "shoes", 1000,
-					"Addidas Shoes", "Men", file);
+			AddProduct product = AddProduct.addProductBuilder("Shoes", textContext.getUserId(), "fashion", "shoes",
+					1000, "Addidas Shoes", "Men", file);
 
 			System.out.println("🔹 Add Product Request Payload (JSON): " + convert.ConvertObjectToJson(product));
 
-			basereq = builder.setContentType(ContentType.MULTIPART).addHeader("Authorization", textContext.getToken()).build();
+			basereq = builder.setContentType(ContentType.MULTIPART).addHeader("Authorization", textContext.getToken())
+					.build();
 
 			req = given().spec(basereq).multiPart("productName", product.getProductName())
 					.multiPart("productAddedBy", product.getProductAddedBy())
@@ -70,27 +74,42 @@ public class Ecom_Login {
 					.multiPart("productImage", product.getProductImage());
 		} else if (apiType.equalsIgnoreCase("placeOrder")) {
 			// place Order Payload
+
 			PlaceOrder placeOrderPayload = PlaceOrder.buildPlaceOrder("India", textContext.getProductId());
 
 			System.out.println(
 					"🔹 Place Order Request Payload (JSON): " + convert.ConvertObjectToJson(placeOrderPayload));
 
-			basereq = builder.setContentType(ContentType.JSON).addHeader("Authorization", textContext.getToken()).build();
+			basereq = builder.setContentType(ContentType.JSON).addHeader("Authorization", textContext.getToken())
+					.build();
 			req = given().spec(basereq).body(placeOrderPayload);
 
-		}
+		} else if (apiType.equalsIgnoreCase("deleteProduct")) {
+			// Delete Added Product Payload
 
-		System.out.println("✅ " + apiType + " request prepared successfully, ready to hit API...");
+			basereq = builder.setContentType(ContentType.JSON).addHeader("Authorization", textContext.getToken())
+					.build();
+
+			req = given().spec(basereq);
+
+			System.out.println("✅ " + apiType + " request prepared successfully, ready to hit API...");
+		}
 	}
 
-	public void callAPI(String apiName) {
+	public void callAPI(String apiName, String requestMethod) {
 		GetEndPoint endPoint = GetEndPoint.valueOf(apiName);
+		if (requestMethod.equals("POST")) {
+			response = req.when().post(endPoint.getEndPoint()) // send POST request
+					.then().log().all() // log response details in console
+					.extract().response();
+		} else if (requestMethod.equals("DELETE")) {
 
-		response = req.when().post(endPoint.getEndPoint()) // send POST request
-				.then().log().all() // log response details in console
-				.extract().response();
+			response = req.when().delete(endPoint.getEndPoint() + textContext.getProductId()) // send DELETE request
+					.then().log().all() // log response details in console
+					.extract().response();
 
-		System.out.println("✅ API executed. Response captured successfully.");
+			System.out.println("✅ API executed. Response captured successfully.");
+		}
 	}
 
 	public void checkResponseCode(int value) {
@@ -117,6 +136,8 @@ public class Ecom_Login {
 			textContext.setUserId(ConvertJsonPath.convertJsonpath(response.asString(), key));
 		} else if (key.equalsIgnoreCase("productId")) {
 			textContext.setProductId(ConvertJsonPath.convertJsonpath(response.asString(), key));
+		} else if (key.equalsIgnoreCase("productOrderId")) {
+			textContext.setProductOrderId(ConvertJsonPath.convertJsonpath(response.asString(), key.concat("[0]")));
 		}
 	}
 

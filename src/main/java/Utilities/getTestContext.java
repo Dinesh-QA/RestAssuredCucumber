@@ -1,21 +1,30 @@
 package Utilities;
 
 public class getTestContext {
-    private static getTestContext instance;
+	private static getTestContext instance;
 	private String token;
 	private String userId;
 	private String productId;
-	
+	private String productOrderId;
+
 	private getTestContext() {
-		
+
 	}
-	
+
 	public static getTestContext getInstance() {
-        if (instance == null) {
-            instance = new getTestContext();
-        }
-        return instance;
-    }
+		if (instance == null) {
+			instance = new getTestContext();
+		}
+		return instance;
+	}
+
+	public String getProductOrderId() {
+		return productOrderId;
+	}
+
+	public void setProductOrderId(String productOrderId) {
+		this.productOrderId = productOrderId;
+	}
 
 	public String getToken() {
 		return token;
