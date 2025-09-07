@@ -1,18 +1,18 @@
 Request method:	DELETE
-Request URI:	https://rahulshettyacademy.com/api/ecom/product/delete-product/68b3e1c1f669d6cb0aa88490
+Request URI:	https://rahulshettyacademy.com/api/ecom/product/delete-product/68b3eb38f669d6cb0aa895f4
 Proxy:			<none>
 Request params:	<none>
 Query params:	<none>
 Form params:	<none>
 Path params:	<none>
-Headers:		Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2MyZTQ4NWMwMTlmYjFhZDYxMTg1YmIiLCJ1c2VyRW1haWwiOiJhcGl0ZXN0cHJhY3Rpc2VAeW9wbWFpbC5jb20iLCJ1c2VyTW9iaWxlIjoxMjM0NTY3ODkxLCJ1c2VyUm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzU2NjE5MTk5LCJleHAiOjE3ODgxNzY3OTl9.TIOohdADJ2az8S_P4YcF0hpVxaCvxyEbe-uqeXjukXA
+Headers:		Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2MyZTQ4NWMwMTlmYjFhZDYxMTg1YmIiLCJ1c2VyRW1haWwiOiJhcGl0ZXN0cHJhY3Rpc2VAeW9wbWFpbC5jb20iLCJ1c2VyTW9iaWxlIjoxMjM0NTY3ODkxLCJ1c2VyUm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzU2NjIxNjIyLCJleHAiOjE3ODgxNzkyMjJ9.2PQCv_dyhOa4o4nqyPO0jqvWv-RvpkILTdHexFrruGA
 				Accept=*/*
 				Content-Type=application/json
 Cookies:		<none>
 Multiparts:		<none>
 Body:			<none>
 HTTP/1.1 200 OK
-Date: Sun, 31 Aug 2025 05:46:41 GMT
+Date: Sun, 31 Aug 2025 06:27:04 GMT
 Server: Apache/2.4.52 (Ubuntu)
 Content-Security-Policy: default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
 X-DNS-Prefetch-Control: off
