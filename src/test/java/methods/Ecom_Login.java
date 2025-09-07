@@ -8,10 +8,6 @@ import java.io.PrintStream;
 
 import org.testng.Assert;
 
-import Utilities.ConvertJsonPath;
-import Utilities.ConvertToJson;
-import Utilities.getTestContext;
-import Utilities.getTestData;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -22,6 +18,10 @@ import pojo.AddProduct;
 import pojo.Login;
 import pojo.PlaceOrder;
 import testdata.GetEndPoint;
+import utilities.ConvertJsonPath;
+import utilities.ConvertToJson;
+import utilities.getTestContext;
+import utilities.getTestData;
 
 public class Ecom_Login {
 	private RequestSpecBuilder builder;

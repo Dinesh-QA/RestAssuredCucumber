@@ -1,4 +1,4 @@
-package Utilities;
+package utilities;
 
 public class getTestContext {
 	private static getTestContext instance;
